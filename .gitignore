@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual env
+venv/
+.venv/
+env/
+
+# Environment
+.env
+*.env
+
+# FAISS indexes (built locally — not committed)
+backend/indexes/
+*.faiss
+*.faiss.meta
+
+# Sentence transformer model cache
+.cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test cache
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# Logs
+*.log

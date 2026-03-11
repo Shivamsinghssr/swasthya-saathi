@@ -1,0 +1,191 @@
+[
+  {
+    "name": "District Hospital Varanasi",
+    "type": "District Hospital",
+    "district": "varanasi",
+    "state": "UP",
+    "address": "Sigra, Varanasi, UP - 221002",
+    "timing": "24 ghante (OPD: Subah 8 baje se Dopahar 2 baje)",
+    "phone": "0542-2508400"
+  },
+  {
+    "name": "PHC Chiraigaon, Varanasi",
+    "type": "Primary Health Centre",
+    "district": "varanasi",
+    "state": "UP",
+    "address": "Chiraigaon, Varanasi, UP",
+    "timing": "Subah 8 baje se Shaam 4 baje (Monday se Saturday)",
+    "phone": null
+  },
+  {
+    "name": "CHC Pindra, Varanasi",
+    "type": "Community Health Centre",
+    "district": "varanasi",
+    "state": "UP",
+    "address": "Pindra, Varanasi, UP",
+    "timing": "24 ghante",
+    "phone": null
+  },
+  {
+    "name": "District Hospital Gorakhpur",
+    "type": "District Hospital",
+    "district": "gorakhpur",
+    "state": "UP",
+    "address": "Medical College Road, Gorakhpur, UP - 273013",
+    "timing": "24 ghante (OPD: Subah 8 baje se Dopahar 2 baje)",
+    "phone": "0551-2203211"
+  },
+  {
+    "name": "PHC Gola Bazar, Gorakhpur",
+    "type": "Primary Health Centre",
+    "district": "gorakhpur",
+    "state": "UP",
+    "address": "Gola Bazar, Gorakhpur, UP",
+    "timing": "Subah 8 baje se Shaam 4 baje",
+    "phone": null
+  },
+  {
+    "name": "District Hospital Lucknow (Loco)",
+    "type": "District Hospital",
+    "district": "lucknow",
+    "state": "UP",
+    "address": "Kaiserbagh, Lucknow, UP - 226001",
+    "timing": "24 ghante",
+    "phone": "0522-2237477"
+  },
+  {
+    "name": "Ram Manohar Lohia Hospital, Lucknow",
+    "type": "Government Medical College Hospital",
+    "district": "lucknow",
+    "state": "UP",
+    "address": "Vibhuti Khand, Gomti Nagar, Lucknow, UP - 226010",
+    "timing": "24 ghante",
+    "phone": "0522-4940400"
+  },
+  {
+    "name": "District Hospital Kanpur",
+    "type": "District Hospital",
+    "district": "kanpur",
+    "state": "UP",
+    "address": "Swaroop Nagar, Kanpur, UP - 208002",
+    "timing": "24 ghante",
+    "phone": "0512-2533777"
+  },
+  {
+    "name": "District Hospital Allahabad (Prayagraj)",
+    "type": "District Hospital",
+    "district": "prayagraj",
+    "state": "UP",
+    "address": "Muthiganj, Prayagraj, UP - 211003",
+    "timing": "24 ghante",
+    "phone": "0532-2402072"
+  },
+  {
+    "name": "Motilal Nehru District Hospital, Prayagraj",
+    "type": "District Hospital",
+    "district": "prayagraj",
+    "state": "UP",
+    "address": "Motilal Nehru Road, Prayagraj, UP",
+    "timing": "24 ghante",
+    "phone": null
+  },
+  {
+    "name": "District Hospital Agra",
+    "type": "District Hospital",
+    "district": "agra",
+    "state": "UP",
+    "address": "MG Road, Agra, UP - 282002",
+    "timing": "24 ghante",
+    "phone": "0562-2526700"
+  },
+  {
+    "name": "District Hospital Meerut",
+    "type": "District Hospital",
+    "district": "meerut",
+    "state": "UP",
+    "address": "Garh Road, Meerut, UP - 250001",
+    "timing": "24 ghante",
+    "phone": "0121-2760025"
+  },
+  {
+    "name": "District Hospital Bareilly",
+    "type": "District Hospital",
+    "district": "bareilly",
+    "state": "UP",
+    "address": "Civil Lines, Bareilly, UP - 243001",
+    "timing": "24 ghante",
+    "phone": "0581-2427676"
+  },
+  {
+    "name": "Patna Medical College Hospital (PMCH)",
+    "type": "Government Medical College Hospital",
+    "district": "patna",
+    "state": "Bihar",
+    "address": "Ashok Rajpath, Patna, Bihar - 800004",
+    "timing": "24 ghante",
+    "phone": "0612-2300556"
+  },
+  {
+    "name": "Nalanda Medical College Hospital (NMCH), Patna",
+    "type": "Government Medical College Hospital",
+    "district": "patna",
+    "state": "Bihar",
+    "address": "Agamkuan, Patna, Bihar - 800007",
+    "timing": "24 ghante",
+    "phone": "0612-2631070"
+  },
+  {
+    "name": "Sadar Hospital Gaya",
+    "type": "District Hospital",
+    "district": "gaya",
+    "state": "Bihar",
+    "address": "Station Road, Gaya, Bihar - 823001",
+    "timing": "24 ghante",
+    "phone": "0631-2220455"
+  },
+  {
+    "name": "Anugrah Narayan Magadh Medical College Hospital, Gaya",
+    "type": "Government Medical College Hospital",
+    "district": "gaya",
+    "state": "Bihar",
+    "address": "Sherkot, Gaya, Bihar - 823001",
+    "timing": "24 ghante",
+    "phone": "0631-2224252"
+  },
+  {
+    "name": "Sadar Hospital Muzaffarpur",
+    "type": "District Hospital",
+    "district": "muzaffarpur",
+    "state": "Bihar",
+    "address": "Juran Chapra, Muzaffarpur, Bihar - 842001",
+    "timing": "24 ghante",
+    "phone": "0621-2213300"
+  },
+  {
+    "name": "Sri Krishna Medical College Hospital (SKMCH), Muzaffarpur",
+    "type": "Government Medical College Hospital",
+    "district": "muzaffarpur",
+    "state": "Bihar",
+    "address": "Muzaffarpur, Bihar - 842004",
+    "timing": "24 ghante",
+    "phone": "0621-2266040"
+  },
+  {
+    "name": "Sadar Hospital Bhagalpur",
+    "type": "District Hospital",
+    "district": "bhagalpur",
+    "state": "Bihar",
+    "address": "Adampur, Bhagalpur, Bihar - 812001",
+    "timing": "24 ghante",
+    "phone": "0641-2400450"
+  },
+  {
+    "name": "Sadar Hospital Darbhanga",
+    "type": "District Hospital",
+    "district": "darbhanga",
+    "state": "Bihar",
+    "address": "Laheriasarai, Darbhanga, Bihar - 846001",
+    "timing": "24 ghante",
+    "phone": "06272-250900"
+  }
+]

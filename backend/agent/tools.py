@@ -6,7 +6,6 @@ Each tool is backed by hybrid RAG retrieval (BM25 + FAISS).
 Tools are initialized at server startup via init_tools().
 """
 from langchain_core.tools import tool
-from typing import Optional
 
 # Global retriever references — set once at startup
 _symptom_retriever  = None

@@ -4,8 +4,6 @@ rag/indexer.py
 Builds FAISS indexes from text files, or loads existing ones.
 Run build_indexes.py once before starting the server.
 """
-import os
-import re
 from pathlib import Path
 from typing import List, Dict, Tuple, Any
 import json

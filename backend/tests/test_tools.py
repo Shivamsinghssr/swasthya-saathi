@@ -32,7 +32,6 @@ class MockRetriever:
 @pytest.fixture(autouse=True)
 def setup_tools():
     """Init tools with mock retrievers before each test."""
-    import json
     health_centers = [
         {
             "name": "Test PHC Varanasi",

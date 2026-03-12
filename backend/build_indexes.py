@@ -15,7 +15,6 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from rag.embedder import Embedder
-from rag.vector_store import FAISSVectorStore
 from rag.indexer import _build_index, _load_txt_files
 import config
 

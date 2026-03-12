@@ -10,7 +10,7 @@ langchain-groq==0.2.3
 langgraph==0.2.53
 
 # RAG
-fastembed==0.3.1
+fastembed
 faiss-cpu
 rank-bm25==0.2.2
 numpy==1.26.4

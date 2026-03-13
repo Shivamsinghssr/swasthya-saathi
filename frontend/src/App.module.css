@@ -1,0 +1,83 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem 0.75rem;
+  gap: 0;
+}
+
+/* ── Tab Bar ─────────────────────────────────────────────────────────────── */
+.tabBar {
+  display: flex;
+  gap: 0.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 0.4rem;
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background var(--transition), color var(--transition);
+}
+
+.tab:hover:not(.active) {
+  background: var(--bg-card-2);
+  color: var(--text-primary);
+}
+
+.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tabIcon { font-size: 1rem; }
+
+.tabLabel { display: none; }
+
+@media (min-width: 420px) {
+  .tabLabel { display: inline; }
+}
+
+/* ── Content ─────────────────────────────────────────────────────────────── */
+.content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  height: 540px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+.footer {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 1rem;
+  line-height: 1.5;
+}

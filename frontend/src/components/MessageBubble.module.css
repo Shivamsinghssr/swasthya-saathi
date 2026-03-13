@@ -1,0 +1,54 @@
+.wrapper { display: flex; margin-bottom: 0.75rem; }
+.userWrapper { justify-content: flex-end; }
+.botWrapper  { justify-content: flex-start; }
+
+.bubble {
+  max-width: 82%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  border-left: 3px solid transparent;
+}
+
+.user {
+  background: var(--user-bubble);
+  border-left-color: var(--user-border);
+  border-radius: var(--radius) var(--radius-sm) var(--radius-sm) var(--radius);
+}
+
+.bot {
+  background: var(--bot-bubble);
+  border-left-color: var(--bot-border);
+  border-radius: var(--radius-sm) var(--radius) var(--radius) var(--radius-sm);
+}
+
+.label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+.text {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+}
+
+.badge {
+  font-size: 0.68rem;
+  background: var(--bg-base);
+  color: var(--accent);
+  border: 1px solid var(--accent-soft);
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+}

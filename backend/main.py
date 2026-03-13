@@ -1,15 +1,17 @@
 """
-main.py — FastAPI app for Swasthya Saathi.
+main.py — Swasthya Saathi v3.0
 
-Phase 1: POST /chat       — text agent
-Phase 2: WS   /ws/voice   — real-time voice (NEW — 4 lines added)
+Phase 1: POST /chat          — text agent
+Phase 2: WS   /ws/voice      — real-time voice
+Phase 3: POST /chat/image    — prescription image analysis (NEW)
+         GET  /ui             — React frontend (built by Vite)
 """
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 import asyncio
 import os
 
@@ -17,9 +19,8 @@ from langchain_core.messages import HumanMessage
 
 from agent.graph import get_graph
 from agent.tools import init_tools
+from agent.image_tool import analyze_prescription_image   # Phase 3 NEW
 from rag.indexer import load_or_build_indexes
-
-# Phase 2 imports — NEW
 from api.voice import router as voice_router, init_voice_runner
 
 
@@ -27,23 +28,19 @@ from api.voice import router as voice_router, init_voice_runner
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("\n🚀 Starting Swasthya Saathi...")
+    print("\n🚀 Starting Swasthya Saathi v3...")
 
     loop = asyncio.get_event_loop()
     retrievers, health_centers = await loop.run_in_executor(
         None, load_or_build_indexes
     )
-
     init_tools(
         symptom_retriever  = retrievers["symptoms"],
         medicine_retriever = retrievers["medicines"],
         scheme_retriever   = retrievers["schemes"],
         health_centers     = health_centers,
     )
-
     get_graph()
-
-    # Phase 2: init voice runner — NEW
     init_voice_runner()
 
     print("\n✅ Swasthya Saathi ready to serve!\n")
@@ -56,7 +53,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Swasthya Saathi API",
     description="Hindi-first health assistant for rural UP and Bihar",
-    version="2.0.0",
+    version="3.0.0",
     lifespan=lifespan,
 )
 
@@ -67,12 +64,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Phase 2: mount voice WebSocket router — NEW
 app.include_router(voice_router)
-
-# # Serve frontend static files
-# if os.path.exists("frontend"):
-#     app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 
 
 # ── Schemas ────────────────────────────────────────────────────────────────────
@@ -87,6 +79,12 @@ class ChatResponse(BaseModel):
     response: str
     tools_used: List[str]
     session_id: str
+
+
+class ImageRequest(BaseModel):
+    image_base64: str
+    mime_type: str = "image/jpeg"
+    session_id: str = "web"
 
 
 class HealthResponse(BaseModel):
@@ -131,13 +129,31 @@ async def chat(request: ChatRequest):
     )
 
 
+@app.post("/chat/image", response_model=ChatResponse)
+async def chat_image(request: ImageRequest):
+    """
+    Phase 3: Analyze a prescription image.
+    Accepts base64-encoded image, returns Hindi explanation.
+    """
+    if not request.image_base64:
+        raise HTTPException(status_code=400, detail="image_base64 is required.")
+
+    loop = asyncio.get_event_loop()
+    response_text = await loop.run_in_executor(
+        None,
+        lambda: analyze_prescription_image(request.image_base64, request.mime_type)
+    )
+
+    return ChatResponse(
+        response   = response_text,
+        tools_used = ["prescription_image_analyzer"],
+        session_id = request.session_id,
+    )
+
+
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
-    return HealthResponse(
-        status  = "ok",
-        service = "Swasthya Saathi",
-        version = "2.0.0",
-    )
+    return HealthResponse(status="ok", service="Swasthya Saathi", version="3.0.0")
 
 
 @app.get("/tools")
@@ -149,6 +165,8 @@ async def list_tools():
             for t in ALL_TOOLS
         ]
     }
-# Serve frontend static files
+
+
+# ── Static files — MUST be last ────────────────────────────────────────────────
 if os.path.exists("frontend"):
     app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")

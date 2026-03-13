@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swasthya Saathi — स्वास्थ्य साथी</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    /* ── Mic Button ─────────────────────────────── */
+    .mic-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    #micBtn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: none;
+      background: #0ea5e9;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(14, 165, 233, 0.4);
+    }
+
+    #micBtn:hover { transform: scale(1.05); }
+    #micBtn.recording {
+      background: #ef4444;
+      animation: pulse 1s infinite;
+      box-shadow: 0 4px 20px rgba(239, 68, 68, 0.5);
+    }
+    #micBtn:disabled { background: #475569; cursor: not-allowed; box-shadow: none; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    #status {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      text-align: center;
+      min-height: 1.2rem;
+    }
+    #status.active { color: #38bdf8; }
+    #status.error  { color: #f87171; }
+
+    /* ── Text Chat ──────────────────────────────── */
+    .text-input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    #textInput {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    #textInput:focus { border-color: #0ea5e9; }
+    #textInput::placeholder { color: #475569; }
+
+    #sendBtn {
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      border: none;
+      background: #0ea5e9;
+      color: white;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #sendBtn:hover { background: #0284c7; }
+    #sendBtn:disabled { background: #475569; cursor: not-allowed; }
+
+    /* ── Conversation ───────────────────────────── */
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 0.5rem;
+    }
+
+    #conversation {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .msg {
+      padding: 0.8rem 1rem;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    .msg.user {
+      background: #1e3a5f;
+      border-left: 3px solid #0ea5e9;
+      align-self: flex-end;
+      max-width: 85%;
+    }
+    .msg.assistant {
+      background: #1a2e1a;
+      border-left: 3px solid #22c55e;
+      max-width: 92%;
+    }
+    .msg .label {
+      font-size: 0.72rem;
+      color: #64748b;
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tools-badge {
+      display: inline-block;
+      background: #0c1a2e;
+      color: #7dd3fc;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      margin-top: 0.4rem;
+      margin-right: 0.25rem;
+    }
+
+    /* ── Disclaimer ─────────────────────────────── */
+    .disclaimer {
+      margin-top: 1.5rem;
+      font-size: 0.78rem;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🏥 Swasthya Saathi</h1>
+<p class="subtitle">स्वास्थ्य साथी — Rural UP & Bihar ke liye Hindi health agent</p>
+
+<div class="card">
+
+  <!-- Mic Button -->
+  <div class="mic-container">
+    <button id="micBtn" title="Baat karne ke liye dabayein">🎤</button>
+    <div id="status">Mic button dabayein aur bolein</div>
+  </div>
+
+  <!-- Text input fallback -->
+  <div class="text-input-row">
+    <input
+      type="text"
+      id="textInput"
+      placeholder="Ya yahan Hindi mein type karein..."
+    />
+    <button id="sendBtn">Bhejein</button>
+  </div>
+
+  <!-- Conversation -->
+  <div class="section-label">Baatceet</div>
+  <div id="conversation"></div>
+
+</div>
+
+<div class="disclaimer">
+  ⚠️ Yeh sirf jaankari ke liye hai — doctor ki jagah nahi.<br/>
+  Emergency mein <strong>108</strong> dial karein.
+</div>
+
+<script>
+  // ── Config ──────────────────────────────────────────────────────────────
+  const WS_URL  = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/voice`;
+  const API_URL = `${location.origin}/chat`;
+
+  // ── State ────────────────────────────────────────────────────────────────
+  let ws           = null;
+  let mediaRecorder = null;
+  let audioChunks  = [];
+  let isRecording  = false;
+  let audioQueue   = [];     // queue of WAV byte arrays to play
+  let isPlaying    = false;
+
+  // ── DOM refs ─────────────────────────────────────────────────────────────
+  const micBtn   = document.getElementById('micBtn');
+  const status   = document.getElementById('status');
+  const textInput = document.getElementById('textInput');
+  const sendBtn  = document.getElementById('sendBtn');
+  const convo    = document.getElementById('conversation');
+
+  // ── WebSocket setup ───────────────────────────────────────────────────────
+  function connectWS() {
+    ws = new WebSocket(WS_URL);
+    ws.binaryType = 'arraybuffer';
+
+    ws.onopen = () => {
+      setStatus('Tayaar hain — bolein ya type karein', 'active');
+      // Keepalive ping every 20s
+      setInterval(() => { if (ws.readyState === WebSocket.OPEN) ws.send('ping'); }, 20000);
+    };
+
+    ws.onclose = () => {
+      setStatus('Connection toot gayi — refresh karein', 'error');
+      setTimeout(connectWS, 3000); // auto-reconnect
+    };
+
+    ws.onerror = (e) => setStatus('WebSocket error — check console', 'error');
+
+    ws.onmessage = (event) => {
+      // Binary = audio chunk
+      if (event.data instanceof ArrayBuffer) {
+        audioQueue.push(new Uint8Array(event.data));
+        if (!isPlaying) playNextChunk();
+        return;
+      }
+
+      // Text = control message
+      try {
+        const msg = JSON.parse(event.data);
+        if (msg.type === 'transcript') {
+          appendMessage('user', msg.text, []);
+          setStatus('Agent soch raha hai...', 'active');
+        }
+        else if (msg.type === 'response_text') {
+          appendMessage('assistant', msg.text, []);
+        }
+        else if (msg.type === 'audio_start') {
+          setStatus('Jawab sun raha hai...', 'active');
+          micBtn.disabled = true;
+        }
+        else if (msg.type === 'audio_end') {
+          setStatus('Tayaar hain — dobara bolein', 'active');
+          micBtn.disabled = false;
+        }
+        else if (msg.type === 'error') {
+          setStatus(`Error: ${msg.message}`, 'error');
+          micBtn.disabled = false;
+        }
+      } catch(e) {
+        if (event.data !== 'pong') console.warn('Unknown message:', event.data);
+      }
+    };
+  }
+
+  // ── Audio playback queue ──────────────────────────────────────────────────
+  async function playNextChunk() {
+    if (audioQueue.length === 0) { isPlaying = false; return; }
+    isPlaying = true;
+    const chunk = audioQueue.shift();
+
+    try {
+      const ctx = new AudioContext({ sampleRate: 16000 });
+      const buffer = await ctx.decodeAudioData(chunk.buffer.slice(0));
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(ctx.destination);
+      source.onended = () => { ctx.close(); playNextChunk(); };
+      source.start(0);
+    } catch(e) {
+      console.warn('Audio decode error:', e);
+      playNextChunk();
+    }
+  }
+
+  // ── Mic recording ─────────────────────────────────────────────────────────
+  micBtn.addEventListener('click', async () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      await startRecording();
+    }
+  });
+
+  async function startRecording() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        const blob = new Blob(audioChunks, { type: 'audio/webm' });
+        const arrayBuffer = await blob.arrayBuffer();
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(arrayBuffer);
+          setStatus('Bhejna ho raha hai...', 'active');
+        } else {
+          setStatus('WebSocket connected nahi — refresh karein', 'error');
+        }
+        stream.getTracks().forEach(t => t.stop());
+      };
+
+      mediaRecorder.start();
+      isRecording = true;
+      micBtn.classList.add('recording');
+      micBtn.textContent = '⏹';
+      setStatus('Sun raha hoon... (rokne ke liye dubara dabayein)', 'active');
+
+    } catch(e) {
+      setStatus('Mic access nahi mila — browser permission check karein', 'error');
+      console.error(e);
+    }
+  }
+
+  function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+    }
+    isRecording = false;
+    micBtn.classList.remove('recording');
+    micBtn.textContent = '🎤';
+    setStatus('Audio process ho raha hai...', 'active');
+  }
+
+  // ── Text chat ─────────────────────────────────────────────────────────────
+  sendBtn.addEventListener('click', sendText);
+  textInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendText(); });
+
+  async function sendText() {
+    const msg = textInput.value.trim();
+    if (!msg) return;
+    textInput.value = '';
+    sendBtn.disabled = true;
+    appendMessage('user', msg, []);
+    setStatus('Agent soch raha hai...', 'active');
+
+    try {
+      const resp = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg, session_id: 'web' }),
+      });
+      const data = await resp.json();
+      appendMessage('assistant', data.response, data.tools_used || []);
+      setStatus('Tayaar hain', 'active');
+    } catch(e) {
+      setStatus('Error — server se response nahi aaya', 'error');
+    } finally {
+      sendBtn.disabled = false;
+    }
+  }
+
+  // ── UI helpers ────────────────────────────────────────────────────────────
+  function setStatus(text, type = '') {
+    status.textContent = text;
+    status.className = type;
+  }
+
+  function appendMessage(role, text, tools) {
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+
+    const label = document.createElement('div');
+    label.className = 'label';
+    label.textContent = role === 'user' ? 'Aap' : 'Swasthya Saathi';
+    div.appendChild(label);
+
+    const content = document.createElement('div');
+    content.textContent = text;
+    div.appendChild(content);
+
+    if (tools && tools.length) {
+      const row = document.createElement('div');
+      row.style.marginTop = '0.4rem';
+      tools.forEach(t => {
+        const badge = document.createElement('span');
+        badge.className = 'tools-badge';
+        badge.textContent = `🔧 ${t}`;
+        row.appendChild(badge);
+      });
+      div.appendChild(row);
+    }
+
+    convo.appendChild(div);
+    convo.scrollTop = convo.scrollHeight;
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  connectWS();
+</script>
+
+</body>
+</html>

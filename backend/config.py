@@ -11,7 +11,7 @@ load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 
 # llama-3.3-70b has strong tool-calling support on Groq
-LLM_MODEL = "llama-3.3-70b-versatile"
+LLM_MODEL = "llama3-groq-70b-8192-tool-use-preview"
 
 # ── Embedder ──────────────────────────────────────────────────────────────────
 # Same model used in production — fast on CPU, good quality

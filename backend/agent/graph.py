@@ -56,7 +56,7 @@ def build_graph():
         model=config.LLM_MODEL,
         temperature=0,
         max_tokens=1024,
-    ).bind_tools(ALL_TOOLS)
+    ).bind_tools(ALL_TOOLS, parallel_tool_calls=False)
 
     # Tool execution node — LangGraph handles invoking the right tool automatically
     tool_node = ToolNode(ALL_TOOLS)

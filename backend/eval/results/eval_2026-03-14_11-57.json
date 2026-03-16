@@ -1,0 +1,242 @@
+{
+  "timestamp": "2026-03-14T11:57:16.266467",
+  "total": 15,
+  "passed": 7,
+  "failed": 8,
+  "pass_rate": "46.7%",
+  "tool_accuracy": "100.0%",
+  "avg_latency_s": 19.21,
+  "results": [
+    {
+      "id": "S01",
+      "category": "symptom",
+      "description": "Basic fever query",
+      "query": "mujhe 3 din se bukhar hai",
+      "passed": true,
+      "tool_correct": true,
+      "tools_called": [
+        "symptom_checker"
+      ],
+      "expected_tool": "symptom_checker",
+      "missing_keywords": [],
+      "hallucinated": [],
+      "latency_s": 2.15,
+      "response_preview": "Bukhar ke kai karan ho sakte hain, jaise ki typhoid, saamanya bukhar, ya TB. Agar aapke bukhar mein yeh lakshan hain: \n- Dheere-dheere badhta bukhar\n- Pet dard\n- Dast ya kabj\n- Sir dard\n- Thakan\n- Bho..."
+    },
+    {
+      "id": "S02",
+      "category": "symptom",
+      "description": "Diarrhea query in Devanagari",
+      "query": "मुझे दस्त हो रहे हैं और पेट में दर्द है",
+      "passed": false,
+      "tool_correct": true,
+      "tools_called": [
+        "symptom_checker"
+      ],
+      "expected_tool": "symptom_checker",
+      "missing_keywords": [
+        "ors",
+        "paani",
+        "namak"
+      ],
+      "hallucinated": [],
+      "latency_s": 1.53,
+      "response_preview": "आपको दस्त और पेट में दर्द हो रहा है, जो कि कई कारणों से हो सकता है। यह एक सामान्य समस्या है जो आहार, पाचन तंत्र, या किसी अन्य स्वास्थ्य समस्या के कारण हो सकती है। \n\nकुछ घरेलू उपाय जो आपको मदद कर सकते ..."
+    },
+    {
+      "id": "S03",
+      "category": "symptom",
+      "description": "Persistent cough",
+      "query": "mujhe khansi aa rahi hai 1 hafte se",
+      "passed": true,
+      "tool_correct": true,
+      "tools_called": [
+        "symptom_checker"
+      ],
+      "expected_tool": "symptom_checker",
+      "missing_keywords": [],
+      "hallucinated": [],
+      "latency_s": 5.43,
+      "response_preview": "Aapko 1 hafte se khansi aa rahi hai. Yeh khansi ke kai karan ho sakte hain, jaise ki thanda, TB, ya koi anya samasya. Agar aapke paas khansi ke saath koi anya lakshan bhi hain, jaise ki bukhar, saas l..."
+    },
+    {
+      "id": "S04",
+      "category": "symptom",
+      "description": "Jaundice symptoms",
+      "query": "meri aankhein aur twacha peeli ho gayi hai",
+      "passed": true,
+      "tool_correct": true,
+      "tools_called": [
+        "symptom_checker"
+      ],
+      "expected_tool": "symptom_checker",
+      "missing_keywords": [],
+      "hallucinated": [],
+      "latency_s": 22.43,
+      "response_preview": "Aapki aankhein aur twacha peeli ho gayi hai, yeh jaundice (piliya) ka lakshan ho sakta hai. Jaundice ke kai karan ho sakte hain, jaise ki liver ki samasya, bile duct ki samasya, ya anya karan. \n\nAapko..."
+    },
+    {
+      "id": "S05",
+      "category": "symptom",
+      "description": "Malaria symptoms — fever with chills",
+      "query": "mujhe tez bukhar hai aur kaanpna ho raha hai",
+      "passed": false,
+      "tool_correct": true,
+      "tools_called": [
+        "symptom_checker"
+      ],
+      "expected_tool": "symptom_checker",
+      "missing_keywords": [
+        "malaria"
+      ],
+      "hallucinated": [],
+      "latency_s": 22.73,
+      "response_preview": "Aapko tez bukhar aur kaanpna ho raha hai, iske liye aapko paracetamol 500mg lena chahiye, zyada se zyada paani, nariyal paani, ya ORS piyein, aur gile kapde mathe par rakhein. Agar aapke lakshan 2-3 d..."
+    },
+    {
+      "id": "M01",
+      "category": "medicine",
+      "description": "Paracetamol dosage",
+      "query": "Paracetamol kaise leni chahiye?",
+      "passed": false,
+      "tool_correct": true,
+      "tools_called": [
+        "medicine_explainer",
+        "medicine_explainer"
+      ],
+      "expected_tool": "medicine_explainer",
+      "missing_keywords": [
+        "500"
+      ],
+      "hallucinated": [],
+      "latency_s": 36.04,
+      "response_preview": "Paracetamol bukhar aur dard ki ek aam dawai hai. Isse 1 tablet (650mg) din mein 3-4 baar lena chahiye, lekin 4 ghante se kam samay mein do baar na lein. Agar aapko 3 din tak bukhar rahe ya dard kam na..."
+    },
+    {
+      "id": "M02",
+      "category": "medicine",
+      "description": "ORS preparation",
+      "query": "ORS ka ghol kaise banate hain?",
+      "passed": true,
+      "tool_correct": true,
+      "tools_called": [
+        "medicine_explainer"
+      ],
+      "expected_tool": "medicine_explainer",
+      "missing_keywords": [],
+      "hallucinated": [],
+      "latency_s": 21.81,
+      "response_preview": "ORS ka ghol banane ke liye, 1 ORS packet ko 1 litre saaf paani mein ghol lein. Isse shareer ka paani aur namak wapas karne mein madad milti hai, jo dast aur ulti mein bahut zaroori hota hai. Yeh dawai..."
+    },
+    {
+      "id": "M03",
+      "category": "medicine",
+      "description": "Iron tablet timing",
+      "query": "iron tablet kab leni chahiye?",
+      "passed": false,
+      "tool_correct": true,
+      "tools_called": [
+        "medicine_explainer",
+        "medicine_explainer"
+      ],
+      "expected_tool": "medicine_explainer",
+      "missing_keywords": [
+        "khane"
+      ],
+      "hallucinated": [],
+      "latency_s": 36.35,
+      "response_preview": "Iron tablets ko khali pet ya dopahar mein lena chahiye. Iske saath nimbu paani ya orange juice lena faydemand hai kyunki iron absorb hota hai. Doodh, chai, ya calcium tablets ke saath lena avoid karei..."
+    },
+    {
+      "id": "M04",
+      "category": "medicine",
+      "description": "Metformin side effects",
+      "query": "Metformin ke side effects kya hain?",
+      "passed": true,
+      "tool_correct": true,
+      "tools_called": [
+        "medicine_explainer",
+        "medicine_explainer"
+      ],
+      "expected_tool": "medicine_explainer",
+      "missing_keywords": [],
+      "hallucinated": [],
+      "latency_s": 36.46,
+      "response_preview": "Metformin ki side effects mein pet mein dard, dast, ulti, aur allergy ho sakti hai. Agar aapko chehre par sujan ya saas lene mein takleef hoti hai, to turant doctor se milein. Metformin type 2 diabete..."
+    },
+    {
+      "id": "SC01",
+      "category": "scheme",
+      "description": "Ayushman Bharat eligibility",
+      "query": "Ayushman Bharat kya hai aur mujhe kaise milega?",
+      "passed": true,
+      "tool_correct": true,
+      "tools_called": [
+        "scheme_checker"
+      ],
+      "expected_tool": "scheme_checker",
+      "missing_keywords": [],
+      "hallucinated": [],
+      "latency_s": 21.4,
+      "response_preview": "Ayushman Bharat - Pradhan Mantri Jan Arogya Yojana (PMJAY) Bharat sarkar ki sabse badi health insurance yojana hai, jiska uddeshya garib parivaron ko 5 lakh rupaye tak ka muft ilaaj pradaan karna hai...."
+    },
+    {
+      "id": "SC02",
+      "category": "scheme",
+      "description": "Maternity schemes",
+      "query": "pregnant mahila ko kya government schemes milti hain?",
+      "passed": true,
+      "tool_correct": true,
+      "tools_called": [
+        "scheme_checker",
+        "scheme_checker"
+      ],
+      "expected_tool": "scheme_checker",
+      "missing_keywords": [],
+      "hallucinated": [],
+      "latency_s": 35.63,
+      "response_preview": "Garbhavati mahilaon ke liye kai sarkari yojnayein hain, jaise ki Janani Suraksha Yojana (JSY), Pradhan Mantri Matru Vandana Yojana (PMMVY), aur Ayushman Bharat Yojana. In yojnayon ke tahat, garbhavati..."
+    },
+    {
+      "id": "SC03",
+      "category": "scheme",
+      "description": "NHM free services",
+      "query": "sarkari aspatal mein kya free milta hai?",
+      "passed": false,
+      "tool_correct": true,
+      "tools_called": [
+        "scheme_checker",
+        "scheme_checker"
+      ],
+      "expected_tool": "scheme_checker",
+      "missing_keywords": [
+        "muft",
+        "nhm"
+      ],
+      "hallucinated": [],
+      "latency_s": 36.56,
+      "response_preview": "Sarkari aspatal mein kai cheezein free mil sakti hain, jaise ki:\n- OPD mein doctor se milna\n- Malaria, TB, HIV ka ilaaj\n- Janani Suraksha Yojana ke under prasav\n- Tikakaran (Vaccination)\n- Family Plan..."
+    },
+    {
+      "id": "H01",
+      "category": "health_center",
+      "passed": false,
+      "error": "Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01k099bfgqemd8at57ga3zkjs1` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99406, Requested 2089. Please try again in 21m31.68s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "latency_s": 9.457297325134277
+    },
+    {
+      "id": "H02",
+      "category": "health_center",
+      "passed": false,
+      "error": "Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01k099bfgqemd8at57ga3zkjs1` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99406, Requested 1855. Please try again in 18m9.503999999s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "latency_s": 0.04297280311584473
+    },
+    {
+      "id": "MT01",
+      "category": "multi",
+      "passed": false,
+      "error": "Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01k099bfgqemd8at57ga3zkjs1` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99406, Requested 1875. Please try again in 18m26.784s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "latency_s": 0.06501078605651855
+    }
+  ]
+}

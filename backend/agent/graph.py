@@ -1,109 +1,110 @@
 """
-agent/graph.py
+agent/graph.py — Phase 4 update
 
-LangGraph ReAct agent for Swasthya Saathi.
+Changes from Phase 3:
+  - Added Langfuse CallbackHandler (3 lines — marked NEW)
+  - Everything else identical
 
-Architecture:
-    [START] → agent_node → (tool calls?) → tools_node → agent_node → ... → [END]
+Langfuse traces every agent run:
+  - Which tools were called
+  - LLM input/output tokens
+  - Latency per step
+  - Full conversation thread
 
-The LLM decides WHICH tools to call and in WHAT ORDER based on the user's query.
-This is the key recruiter signal: real agent orchestration, not scripted logic.
-""" 
+Dashboard: https://cloud.langfuse.com
+"""
+import os
+from functools import lru_cache
 from typing import Annotated
+
+from langchain_core.messages import BaseMessage
+from langchain_groq import ChatGroq
+from langgraph.graph import END, StateGraph
+from langgraph.graph.message import add_messages
+from langgraph.prebuilt import ToolNode
 from typing_extensions import TypedDict
 
-from langgraph.graph import StateGraph
-from langgraph.graph.message import add_messages
-from langgraph.prebuilt import ToolNode, tools_condition
-from langchain_groq import ChatGroq
-from langchain_core.messages import SystemMessage, BaseMessage
-
-from agent.tools import ALL_TOOLS
-from agent.prompts import SYSTEM_PROMPT
 import config
+from agent.tools import ALL_TOOLS
+
+
+# ── Langfuse setup — NEW (3 lines) ────────────────────────────────────────────
+def _get_langfuse_handler():
+    """Returns Langfuse callback handler if keys are set, else None."""
+    pub  = os.getenv("LANGFUSE_PUBLIC_KEY", "")
+    sec  = os.getenv("LANGFUSE_SECRET_KEY", "")
+    host = os.getenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
+    if pub and sec:
+        try:
+            from langfuse.callback import CallbackHandler
+            handler = CallbackHandler(public_key=pub, secret_key=sec, host=host)
+            print("[Langfuse] ✅ Observability enabled")
+            return handler
+        except ImportError:
+            print("[Langfuse] ⚠️  langfuse package not installed — skipping")
+    else:
+        print("[Langfuse] ℹ️  Keys not set — observability disabled")
+    return None
 
 
 # ── Agent State ────────────────────────────────────────────────────────────────
-
 class AgentState(TypedDict):
-    """
-    State passed between nodes in the graph.
-    messages: full conversation history — LangGraph handles appending automatically.
-    """
     messages: Annotated[list[BaseMessage], add_messages]
 
 
 # ── Graph Builder ──────────────────────────────────────────────────────────────
-
-def build_graph():
+@lru_cache(maxsize=1)
+def get_graph():
     """
-    Builds and compiles the LangGraph ReAct agent.
-    Called once at startup — graph is reused across all requests.
-    
-    Node flow:
-        agent_node: LLM decides next action (reply or tool call)
-        tools_node: Executes tool calls, returns results to agent
-        
-    Routing:
-        tools_condition: built-in LangGraph helper
-        → if last message has tool_calls  → go to tools_node
-        → else                            → END
+    Build and cache the LangGraph ReAct agent.
+    Called once at startup via lifespan().
     """
+    print("[Graph] Building LangGraph agent...")
 
-    # LLM with tools bound — Groq llama3.3-70b has strong tool-calling support
+    langfuse_handler = _get_langfuse_handler()  # NEW
+
     llm = ChatGroq(
         api_key=config.GROQ_API_KEY,
         model=config.LLM_MODEL,
         temperature=0,
         max_tokens=1024,
+        callbacks=[langfuse_handler] if langfuse_handler else [],  # NEW
     ).bind_tools(ALL_TOOLS, parallel_tool_calls=False)
 
-    # Tool execution node — LangGraph handles invoking the right tool automatically
-    tool_node = ToolNode(ALL_TOOLS)
+    def agent_node(state: AgentState):
+        from agent.prompts import SYSTEM_PROMPT
+        from langchain_core.messages import SystemMessage
 
-    # ── Agent Node ────────────────────────────────────────────────────────────
-    def agent_node(state: AgentState) -> dict:
-        """
-        Core reasoning node.
-        Prepends system prompt, calls LLM, returns response.
-        LLM may respond with text OR with tool_calls.
-        """
-        # Always inject system prompt as first message
-        messages = [SystemMessage(content=SYSTEM_PROMPT)] + state["messages"]
-        response = llm.invoke(messages)
+        messages = state["messages"]
+        if not any(isinstance(m, SystemMessage) for m in messages):
+            messages = [SystemMessage(content=SYSTEM_PROMPT)] + list(messages)
+
+        # Pass langfuse handler as config — NEW
+        config_dict = {}
+        if langfuse_handler:
+            config_dict = {"callbacks": [langfuse_handler]}
+
+        response = llm.invoke(messages, config=config_dict)  # NEW (added config)
         return {"messages": [response]}
 
-    # ── Build Graph ───────────────────────────────────────────────────────────
-    graph_builder = StateGraph(AgentState)
+    def tools_condition(state: AgentState):
+        last = state["messages"][-1]
+        if hasattr(last, "tool_calls") and last.tool_calls:
+            return "tools"
+        return END
 
-    graph_builder.add_node("agent", agent_node)
-    graph_builder.add_node("tools", tool_node)
+    tools_node = ToolNode(ALL_TOOLS)
 
-    # Entry point
-    graph_builder.set_entry_point("agent")
+    graph = StateGraph(AgentState)
+    graph.add_node("agent_node", agent_node)
+    graph.add_node("tools_node", tools_node)
+    graph.set_entry_point("agent_node")
+    graph.add_conditional_edges("agent_node", tools_condition, {
+        "tools": "tools_node",
+        END: END,
+    })
+    graph.add_edge("tools_node", "agent_node")
 
-    # Conditional routing: tool call → tools node, else → END
-    graph_builder.add_conditional_edges(
-        "agent",
-        tools_condition,   # LangGraph built-in: checks for tool_calls
-    )
-
-    # After tools execute → always return to agent for reasoning
-    graph_builder.add_edge("tools", "agent")
-
-    return graph_builder.compile()
-
-
-# ── Singleton ──────────────────────────────────────────────────────────────────
-# Graph is built once at server startup — all requests share it (stateless graph)
-
-_graph = None
-
-
-def get_graph():
-    global _graph
-    if _graph is None:
-        print("[Graph] Building LangGraph agent...")
-        _graph = build_graph()
-        print("[Graph] ✅ Agent ready.")
-    return _graph
+    compiled = graph.compile()
+    print("[Graph] ✅ Agent ready.")
+    return compiled

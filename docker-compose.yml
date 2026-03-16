@@ -1,0 +1,48 @@
+# ── Swasthya Saathi — Docker Compose ──────────────────────────────────────────
+#
+# Usage:
+#   docker compose up --build        # first time
+#   docker compose up                # subsequent runs
+#   docker compose down              # stop
+#   docker compose logs -f backend   # live logs
+#
+# Opens:
+#   http://localhost:8080            # React UI
+#   http://localhost:8080/docs       # Swagger API docs
+#   http://localhost:3000            # Langfuse dashboard (if enabled)
+
+services:
+
+  # ── Main Backend ─────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: swasthya-saathi
+    network_mode: host 
+    ports:
+      - "8080:8080"
+    environment:
+      # Required
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - SARVAM_API_KEY=${SARVAM_API_KEY}
+      # Langfuse observability (optional — leave blank to disable)
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
+      - LANGFUSE_HOST=${LANGFUSE_HOST:-https://cloud.langfuse.com}
+    volumes:
+      # Persist FAISS indexes across container restarts
+      - indexes_data:/app/indexes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  indexes_data:
+    driver: local
+    

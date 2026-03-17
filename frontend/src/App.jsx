@@ -3,12 +3,14 @@ import Header from './components/Header'
 import ChatTab from './components/ChatTab'
 import VoiceTab from './components/VoiceTab'
 import PrescriptionTab from './components/PrescriptionTab'
+import AdminTab from './components/AdminTab'
 import styles from './App.module.css'
 
 const TABS = [
   { id: 'chat',         label: 'Chat',         icon: '💬' },
   { id: 'voice',        label: 'Awaaz',         icon: '🎤' },
   { id: 'prescription', label: 'Prescription',  icon: '📋' },
+  { id: 'admin',        label: 'Admin',         icon: '⚙️' },
 ]
 
 export default function App() {
@@ -19,7 +21,6 @@ export default function App() {
       <Header />
 
       <div className={styles.layout}>
-        {/* Tab bar */}
         <nav className={styles.tabBar}>
           {TABS.map(t => (
             <button
@@ -33,11 +34,11 @@ export default function App() {
           ))}
         </nav>
 
-        {/* Tab content */}
         <main className={styles.content}>
           {activeTab === 'chat'         && <ChatTab />}
           {activeTab === 'voice'        && <VoiceTab />}
           {activeTab === 'prescription' && <PrescriptionTab />}
+          {activeTab === 'admin'        && <AdminTab />}
         </main>
       </div>
 
